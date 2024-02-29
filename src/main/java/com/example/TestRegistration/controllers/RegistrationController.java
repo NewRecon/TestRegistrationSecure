@@ -1,9 +1,8 @@
 package com.example.TestRegistration.controllers;
 
 import com.example.TestRegistration.entities.User;
+import com.example.TestRegistration.services.JdbcUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class RegistrationController {
     @Autowired
-    JdbcUserDetailsManager jdbcUserDetailsManager;
+    JdbcUserDetailService jdbcUserDetailService;
 
 //    @GetMapping("/")
 //    public String getLoginPage(){
@@ -24,10 +23,8 @@ public class RegistrationController {
     }
     @PostMapping("/registration")
     public String registration(User user){
-        user.setPassword(encoder().encode(user.getPassword()));
-        jdbcUserDetailsManager.createUser(user);
-        System.out.println(user);
-        return "redirect:/";
+        jdbcUserDetailService.registerUser(user);
+        return "redirect:/startPage";
     }
 
     @GetMapping("/startPage")
@@ -35,7 +32,4 @@ public class RegistrationController {
         return "startPage";
     }
 
-    BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
 }
