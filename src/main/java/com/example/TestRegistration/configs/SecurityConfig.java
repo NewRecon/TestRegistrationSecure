@@ -12,9 +12,6 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 @Configuration
 @EnableWebSecurity
@@ -25,11 +22,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(req->{
-            req.requestMatchers("/registration").permitAll();
-            req.requestMatchers("/startPage").authenticated();
+            req.requestMatchers("/registration").permitAll().anyRequest().authenticated();
         });
         http.formLogin(log->{
-            log.permitAll();
+            log.loginPage("/login").permitAll();
         });
         http.httpBasic(Customizer.withDefaults());
         http.csrf(cust->{
